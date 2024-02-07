@@ -146,34 +146,34 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
         }
 
         //Add Product Fields
-        if (copyPasteProductListColumn == FieldID.CATEGORY || (category.length > 0 && category[0]!='ALL' && !categoryRollup)){
+        if (copyPasteProductListColumn == FieldID.CATEGORY || (category.length > 0 && category[0]!='ALL' ) || categoryRollup){
             for (var categoryField of CategoryFields){
                 searchString+=" ["+categoryField+"]"
             } 
         }
-        if (copyPasteProductListColumn == FieldID.GROUP || (group.length > 0 && group[0]!='ALL' && !groupRollup)){
+        if (copyPasteProductListColumn == FieldID.GROUP || (group.length > 0 && group[0]!='ALL') || groupRollup){
             for (var groupField of GroupFields){
                 searchString += " ["+groupField+"]"
             }    
         }
-        if (copyPasteProductListColumn == FieldID.UPC || (upc.length > 0 && upc[0]!='ALL' && !upcRollup)){
+        if (copyPasteProductListColumn == FieldID.UPC || (upc.length > 0 && upc[0]!='ALL') || upcRollup){
             for (var upcField of UPCFields){
                 searchString += " ["+upcField+"]"
             }      
         }
 
         //Add Location Fields
-        if (copyPasteLocationListColumn == FieldID.STORE || (store.length > 0 && store[0]!='ALL' && !storeRollup)){
+        if (copyPasteLocationListColumn == FieldID.STORE || (store.length > 0 && store[0]!='ALL') || storeRollup){
             for (var storeField of StoreFields){
                 searchString += " ["+storeField+"]"
             }
         }
-        if (copyPasteLocationListColumn == FieldID.STORE || (division.length > 0 && division[0]!='ALL' && !divisionRollup)){
+        if (copyPasteLocationListColumn == FieldID.STORE || (division.length > 0 && division[0]!='ALL') || divisionRollup){
             for (var divisionField of DivisionFields){
                 searchString += " ["+divisionField+"]"
             }
         }
-        if (copyPasteLocationListColumn == FieldID.DISTRICT || (district.length > 0 && district[0]!='ALL' && !districtRollup)){
+        if (copyPasteLocationListColumn == FieldID.DISTRICT || (district.length > 0 && district[0]!='ALL') || districtRollup){
             for (var districtField of DistrictFields){
                 searchString += " ["+districtField+"]"
             }
@@ -265,14 +265,13 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
         <div className="flex flex-col w-full">
         <ExpandFilterButton tsURL={tsURL} toggleExpandFilters={toggleExpandFilters}></ExpandFilterButton>
 
-        <div ref={filterRef} className="flex flex-row w-full bg-slate-600 p-4 space-x-4" style={{height:'660px'}}>
+        <div ref={filterRef} className="flex flex-row w-full p-4 space-x-4" style={{height:'680px',background:"#fbfbfb"}}>
             <div className="flex flex-col w-1/3 h-full space-y-4">
                 <div className="flex flex-col">
-                    <div className="text-white text-2xl font-bold">
+                    <div className="text-black text-2xl font-bold">
                         1. TIME FRAME
-
                     </div>
-                    <div className="bg-slate-100 rounded-lg p-4 text-lg">
+                    <div className="bg-white shadow-md border-slate-100 border-2 rounded-lg p-4 text-lg">
                         <div className={"flex w-full flex-row font-bold align-center"}>
                              <div className="w-2/3">Choose Time Frame</div>
                              <div className="flex w-1/3 justify-end font-2xl">
@@ -292,7 +291,7 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                             <input checked={calendarWeek=="promo"} className="ml-4" type="radio" value="promo" name="timeframe" /> Promo Week
                         </div>
                         {calendarWeek == "fiscal" ?
-                        <select className={usingManualDates ? "w-full text-slate-400" : "w-full"}   onChange={(e:any)=>setTimeFrame(e.target.value)}>
+                        <select className={usingManualDates ? "w-full text-slate-400 border-slate-100 border-2" : "w-full border-slate-100 border-2"}   onChange={(e:any)=>setTimeFrame(e.target.value)}>
                             <option value='last week'>Last Week</option>
                             <option value='this week'>This Week</option>
                             <option value='yesterday'>Yesterday</option>
@@ -308,7 +307,7 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                             <option value='year to date'>Year To Date</option>
                         </select>
                         :
-                        <select className={usingManualDates ? "w-full text-slate-400" : "w-full"}  onChange={(e:any)=>setTimeFrame(e.target.value)}>
+                        <select className={usingManualDates ? "w-full text-slate-400 border-slate-100 border-2" : "w-full border-slate-100 border-2"}  onChange={(e:any)=>setTimeFrame(e.target.value)}>
                             <option value='Last Promo Week'>Last Week</option>
                             <option value='Last 4 Promo Weeks'>Last 4 Weeks</option>
                             <option value='Last 12 Promo Weeks'>Last 12 Weeks</option>
@@ -322,17 +321,17 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                 </div>
                 
                 <div className="flex flex-col">
-                    <div className="text-white text-2xl font-bold">
+                    <div className="text-black text-2xl font-bold">
                         2. LOCATION
                     </div>
                     {(copyPasteLocationList && copyPasteLocationList.length >0) ?
-                        <div className="flex flex-col w-full h-full items-center justify-center bg-slate-100 rounded-lg p-4 space-y-4">
+                        <div className="flex flex-col w-full h-full items-center justify-center bg-slate-200 rounded-lg p-4 space-y-4">
                         <div> Manual values entered for: <b>{copyPasteLocationListColumn} </b></div>
                         <div> {copyPasteLocationList.length < 20 ? copyPasteLocationList.join(", ") : copyPasteLocationList.length + " Values"}</div>
                         <button className="bg-gray-400 w-24 h-12 rounded-lg text-white" onClick={() => toggleLocationCopyPaste([],"")}>Clear</button>
                         </div>
                     :
-                    <div className="flex flex-col bg-slate-100 rounded-lg p-4 space-y-4">
+                    <div className="flex flex-col bg-white shadow-md border-slate-100 border-2 rounded-lg p-4 space-y-4">
                     <div className="flex flex-col text-lg">
                     <div className="flex flex-row font-bold w-full">
                         <div className="flex justify-start w-3/4">
@@ -345,7 +344,7 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                         </div>
                     </div>
                     {!divisionRollup ?
-                    <DropdownFilter key={division.toString()} tsURL={tsURL} runtimeFilters={{}} value={division} field={FieldName.DIVISION} fieldId={FieldID.DIVISION} fieldLabel={FieldLabel.DIVISION} setFilter={setDivision} multiple={true}  height={"h-28"}></DropdownFilter>
+                    <DropdownFilter tsURL={tsURL} runtimeFilters={{}} value={division} field={FieldName.DIVISION} fieldId={FieldID.DIVISION} fieldLabel={FieldLabel.DIVISION} setFilter={setDivision} multiple={true}  height={"h-28"}></DropdownFilter>
                     :
                     <div className="h-28 w-full bg-white flex items-center justify-center">
                     {'All '+FieldLabel.DIVISION}
@@ -369,7 +368,7 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                         val1:division
                     }} value={district} field={FieldName.DISTRICT} fieldId={FieldID.DISTRICT} fieldLabel={FieldLabel.DISTRICT} setFilter={setDistrict} multiple={true}  height={"h-24"}></DropdownFilter>
                     :
-                    <div className="h-24 w-full bg-white flex items-center justify-center">
+                    <div className="h-24 w-full bg-white flex items-center justify-center border-slate-100 border-2">
                         {'All '+FieldLabel.DISTRICT}
                     </div>
                     }
@@ -394,7 +393,7 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                         val2:division
                     }} value={store} field={FieldName.STORE} fieldId={FieldID.STORE} fieldLabel={FieldLabel.STORE} setFilter={setStore} multiple={true}  height={"h-24"}></DropdownFilter>
                     :
-                    <div className="h-24 w-full bg-white flex items-center justify-center">
+                    <div className="h-24 w-full bg-white flex items-center justify-center border-slate-100 border-2">
                         {'All '+FieldLabel.STORE}
                     </div>
                     }
@@ -406,18 +405,18 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                 </div>
             </div>
             <div className="flex flex-col w-full h-full">
-                <div className="text-white text-2xl font-bold">
+                <div className="text-black text-2xl font-bold">
                 3. PRODUCT HIERARCHY
                 </div>
                 
-                <div className="flex flex-col w-full h-full items-center justify-center bg-slate-100 rounded-lg p-4">
+                <div className="flex flex-col w-full h-full items-center justify-center bg-white shadow-md border-slate-100 border-2 rounded-lg p-4">
 
-                <div className="flex flex-row w-full h-full bg-slate-100 rounded-lg space-x-4">
+                <div className="flex flex-row w-full h-full rounded-lg space-x-4">
                     <></>
                     <div className="flex flex-col h-full w-5/12 text-lg">
                         <div className="mb-4">
                             <div className="flex flex-row font-bold w-full">
-                                <div className="flex justify-start w-1/2">Group Hierarchy
+                                <div className="flex justify-start w-1/2">Category Hierarchy
                                 <IncludeExcludeButton value={groupExclude}  setValue={setGroupExclude}></IncludeExcludeButton>
                                 </div>
                                 <div className="flex justify-end w-1/2">
@@ -425,11 +424,12 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                                     <RollUpButton onChange={()=>setGroupRollup(!groupRollup)} />
                                 </div>
                             </div>
-                            <DropdownFilter  key={group.toString()} tsURL={tsURL} runtimeFilters={{}} value={group} fieldId={FieldID.GROUP} fieldLabel={FieldLabel.GROUP} field={FieldName.GROUP} setFilter={setGroup} multiple={true} height={"h-52"}></DropdownFilter>
+                            <DropdownFilter tsURL={tsURL} runtimeFilters={{}} value={group} fieldId={FieldID.GROUP} fieldLabel={FieldLabel.GROUP} field={FieldName.GROUP} setFilter={setGroup} multiple={true} 
+                            height={"h-56"}></DropdownFilter>
                         </div>
                         <div className="mb-4">
                             <div className="flex flex-row font-bold w-full">
-                                    <div className="flex justify-start w-1/2">Category Hierarchy
+                                    <div className="flex justify-start w-1/2">Product Hierarchy
                                     <IncludeExcludeButton value={categoryExclude}  setValue={setCategoryExclude}></IncludeExcludeButton>
                                     </div>
                                     <div className="flex justify-end w-1/2">
@@ -442,18 +442,19 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                                 col1:FieldID.GROUP,
                                 op1:groupExclude? "NE" : "IN",
                                 val1:group,
-                            }} value={category} field={FieldName.CATEGORY} fieldId={FieldID.CATEGORY} fieldLabel={FieldLabel.CATEGORY} setFilter={setCategory} multiple={true} height={"h-52"}></DropdownFilter>
+                            }} value={category} field={FieldName.CATEGORY} fieldId={FieldID.CATEGORY} fieldLabel={FieldLabel.CATEGORY} setFilter={setCategory} multiple={true} 
+                            height={"h-56"}></DropdownFilter>
                             :
-                            <div className="h-52 w-full bg-white flex items-center justify-center">
+                            <div className="h-56 w-full bg-white flex items-center justify-center border-slate-100 border-2">
                             {'All '+FieldLabel.CATEGORY}
                             </div>
                             }
                             </div>
                     </div>
                     <div className="flex flex-col h-full w-7/12 text-lg">
-                        <div className="flex flex-row">
-                        <div className="flex flex-col h-full w-9/12">
-                            <div className="mb-8">
+                        <div className="flex flex-row h-full">
+                        <div className="flex flex-col h-full w-9/12 pb-3">
+                            <div className="mb-8 h-full">
                                 <div className="flex flex-row font-bold w-full">
                                     <div className="flex justify-start w-1/2">UPC Hierarchy
                                     <IncludeExcludeButton value={upcExclude}  setValue={setUpcExclude}></IncludeExcludeButton>
@@ -482,9 +483,10 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                                     //     op3:"EQ",
                                     //     val3:["N"]
                                     // })
-                                }} value={upc} field={FieldName.UPC} fieldId={FieldID.UPC} fieldLabel={FieldLabel.UPC} setFilter={setUpc} multiple={true} height={"h-96"}></DropdownFilter>
+                                }} value={upc} field={FieldName.UPC} fieldId={FieldID.UPC} fieldLabel={FieldLabel.UPC} setFilter={setUpc} multiple={true}
+                                 height={"h-full"}></DropdownFilter>
                                 :
-                                <div className="h-96 w-full bg-white flex items-center justify-center">
+                                <div className="border-slate-100 border-2 h-full b-2 w-full bg-white flex items-center justify-center">
                                     {'All '+FieldLabel.UPC}
                                 </div>
                                 }
@@ -492,36 +494,27 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                         </div>
                         <div className="flex flex-col h-full w-3/12 text-sm ml-4 justify-center">
                             <div className="font-bold text-lg">Additional Fields</div>
-                            <div className="mt-2 mb-2 text-sm"> {/* Adjusted margins for compact spacing */}
-                                <label className="block">
-                                    <input className="mr-2" type="radio" name="obNbSelection" value="OB & NB" checked={obNbSelection === 'OB & NB'} onChange={() => setObNbSelection('OB & NB')} />
-                                    OB & NB
-                                </label>
-                                <label className="block">
-                                    <input className="mr-2" type="radio" name="obNbSelection" value="NB" checked={obNbSelection === 'NB'} onChange={() => setObNbSelection('NB')} />
-                                    NB Only
-                                </label>
-                                <label className="block">
-                                    <input className="mr-2" type="radio" name="obNbSelection" value="OB" checked={obNbSelection === 'OB'} onChange={() => setObNbSelection('OB')} />
-                                    OB Only
-                                </label>
-                            </div>
                             <hr className="border-t border-gray-300 mb-2" />
-
-                            <div><input className="mr-2" onChange={()=>toggleField("Banner Corporate")} type="checkbox"></input>Corp. Banner</div>
-                            <div><input className="mr-2" onChange={()=>toggleField("Banner Store")} type="checkbox"></input>Store Banner</div>
-                            <div><input className="mr-2" onChange={()=>toggleField("Vendor Brand")} type="checkbox"></input>Vendor</div>
+                            <div className="my-2 font-bold text-md">General</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Brand")} type="checkbox"></input>Brand</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Promotion Discount")} type="checkbox"></input>Promo</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Promotion Region")} type="checkbox"></input>Promo Region</div>
                             {/* class id + description when class selected */}
-                            <div><input className="mr-2" onChange={()=>toggleField("Class")} type="checkbox"></input>Class</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Transaction Date")} type="checkbox"></input>Period</div>
 
-                            <div><input className="mr-2" onChange={()=>toggleField("Sub Class")} type="checkbox"></input>Sub Class</div>
-                            <div><input className="mr-2" onChange={()=>toggleField("Date")} type="checkbox"></input>Date</div>
-                            <div><input className="mr-2" onChange={()=>toggleField("Period ID")} type="checkbox"></input>Period ID</div>
-                            <div><input className="mr-2" onChange={()=>toggleField("Quarter ID")} type="checkbox"></input>Quarter ID</div>
-                            <div><input className="mr-2" onChange={()=>toggleField("CIG")} type="checkbox"></input>CIG</div>
-                            <div><input className="mr-2" onChange={()=>toggleField("Vendor Parent")} type="checkbox"></input>Parent Vendor</div>
-                            <div><input className="mr-2" onChange={()=>setSameStore(!sameStore)} type="checkbox"></input>Same Store</div>
-                            <div><input className="mr-2" onChange={()=>setRegStore(!regStore)} type="checkbox"></input>Reg Stores Only</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Diet Type")} type="checkbox"></input>Diet</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Customer Name")} type="checkbox"></input>Customer</div>
+                            <div className="my-2 font-bold text-md">Demographics</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Age Group")} type="checkbox"></input>Customer Age</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Gender")} type="checkbox"></input>Customer Gender</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Marital Status")} type="checkbox"></input>Customer Marital</div>                            <div><input className="mr-2" onChange={()=>toggleField("Occupation")} type="checkbox"></input>Customer Occup.</div>
+
+                            <div className="my-2 font-bold text-md">Basket Analysis</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Basket Contents")} type="checkbox"></input>Basket Contents</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Average Basket Size")} type="checkbox"></input>Basket Size</div>
+                            <div><input className="mr-2" onChange={()=>toggleField("Average Ticket Size")} type="checkbox"></input>Ticket Size</div>                            <div><input className="mr-2" onChange={()=>toggleField("Occupation")} type="checkbox"></input>Customer Occup.</div>
+
+
                         </div>
                     </div>
 
@@ -531,7 +524,7 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
 
                     <div onClick={onReportLoad}  className="flex w-full bg-slate-600 hover:bg-slate-500 align-center items-center p-2 text-white font-bold rounded-lg  hover:cursor-pointer">
                         <span>Load Report</span>
-                        <div className="ml-auto flex items-center bg-yellow-400 hover:bg-yellow-300 rounded-lg px-4 py-1">
+                        <div className="ml-auto flex items-center bg-blue-400 hover:bg-blue-300 rounded-lg px-4 py-1">
                             <HiMiniPlay className="mr-2" /> {/* Icon next to "GO" */}
                             GO!
                         </div>
@@ -572,7 +565,7 @@ const CopyPasteButton: React.FC<CopyPasteButtonProps> = ({onSubmit, field}:CopyP
                 <div className="w-full">{field + " - Paste a list of IDs"}</div>
                 <textarea className="w-90 h-40 rounded-md" value={values} onChange={(e)=> setValues(e.target.value)}></textarea>
                 <div className="bg-slate-600 h-16 w-full items-center justify-center flex space-x-4 rounded-lg">
-                <button className="bg-yellow-400 w-24 h-12 rounded-lg text-white " onClick={ToggleSubmit}>Submit</button>
+                <button className="bg-blue-400 w-24 h-12 rounded-lg text-white " onClick={ToggleSubmit}>Submit</button>
                 <button className="bg-gray-400 w-24 h-12 rounded-lg text-white " onClick={ToggleClear}>Clear</button>
                 </div>
             </div>
@@ -587,8 +580,9 @@ interface RollUpButtonProps {
 const RollUpButton: React.FC<RollUpButtonProps> = ({onChange}:RollUpButtonProps )=> {
     return (
         <>
+                    <div className="mr-2 font-normal">Add</div>
+
             <input onChange={onChange} type="checkbox"></input>
-            <div className="ml-2 font-normal"></div>
         </>
     )
 }
@@ -616,7 +610,7 @@ interface ExpandFilterProps {
 }
 const ExpandFilterButton: React.FC<ExpandFilterProps> = ({tsURL,toggleExpandFilters}: ExpandFilterProps) => {
     const [filtersVisible, setFiltersVisible] = useState(true);
-    
+    const [sageSearch, setSageSearch] = useState('')
     useEffect(() => {
         function handleLoad(){
             setFiltersVisible(false)
@@ -632,19 +626,42 @@ const ExpandFilterButton: React.FC<ExpandFilterProps> = ({tsURL,toggleExpandFilt
         setFiltersVisible(false)
         toggleExpandFilters(false)
     }
+    function triggerSageSearch(){
+        if (filtersVisible){
+            setFiltersVisible(false)
+            toggleExpandFilters(false)
+        }
+        const event = new CustomEvent('loadSage', {detail: {data: {
+            searchString: sageSearch}
+        }});
+        window.dispatchEvent(event)
+    }
     return (
         <div className="flex h-16 bg-slate-200 flex-row m-4 rounded-md">
-            <div className="flex w-1/2 items-center justify-start  ">
-                <div className="pl-4 font-bold text-yellow-400 text-2xl pr-8">
-                GOLD REPORT
+            <div className="flex w-4/12 items-center justify-start  ">
+                <div className="pl-4 font-bold text-blue-400 w-48 text-2xl pr-8">
+                CPG Search
                 </div>
+                <div>
                 <MyReports collapseFilters={collapseFilters} tsURL={tsURL}></MyReports>
 
-            </div>
+                </div>
 
-            <div onClick={toggleFilters} className="mr-4 flex w-1/2 items-center justify-end font-bold hover:cursor-pointer hover:text-blue-500 text-2xl">
+            </div>
+            <div className="flex w-5/12 bg-white rounded-2xl my-2 p-2"> 
+                <input onKeyUp={(e)=>{
+                    if (e.key === 'Enter' || e.keyCode === 13) {
+                        triggerSageSearch();
+                    }
+                }} onChange={(e)=>setSageSearch(e.target.value)} value={sageSearch} placeholder="Ask AI a Data Question" className="rounded-2xl w-full pl-2"></input>
+                <div onClick={triggerSageSearch} className="ml-auto text-white  flex items-center bg-blue-400 hover:bg-blue-300 rounded-lg px-4 py-2">
+                    <HiMiniPlay className="mr-2" /> {/* Icon next to "GO" */}
+                    GO!
+                </div>
+            </div>
+            <div onClick={toggleFilters} className="mr-4 flex w-3/12 items-center justify-end font-bold hover:cursor-pointer hover:text-blue-500 text-2xl">
                 {
-                filtersVisible ?<><div className="text-sm mr-2">COLLAPSE MENU</div> <HiFunnel></HiFunnel></>: <><div className="text-sm mr-2">EXPAND MENU</div><HiFunnel></HiFunnel></>
+                filtersVisible ?<><div className="text-sm mr-2">COLLAPSE GUIDED SEARCH</div> <HiFunnel></HiFunnel></>: <><div className="text-sm mr-2">EXPAND GUIDED SEARCH</div><HiFunnel></HiFunnel></>
                 }</div>
 
         </div>

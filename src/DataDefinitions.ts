@@ -16,11 +16,11 @@ export enum FieldID {
 }
 export enum FieldLabel {
     STORE = 'STORES',
-    CATEGORY = 'DEPARTMENTS',
+    CATEGORY = 'PRODUCTS',
     GROUP = 'CATEGORIES',
     DIVISION = 'DIVISIONS',
     DISTRICT = 'DISTRICTS',
-    UPC = 'PRODUCTS'
+    UPC = 'SKUS'
 }
 export const BaseFields: string[] = [
     'Sales',

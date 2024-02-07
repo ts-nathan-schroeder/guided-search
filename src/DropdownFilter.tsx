@@ -41,7 +41,7 @@ export const DropdownFilter: React.FC<DropdownFilterProps> = ({tsURL,field,field
         })
     },[])
     return (
-        <select className={height + " text-gray-800"} style={{width:"100%"}} onChange={(e) => {
+        <select className={height + " text-gray-800 border-slate-100 border-2"} style={{width:"100%"}} onChange={(e) => {
             if (multiple){
                 let filterVals = Array.from(e.target.selectedOptions).map((option) => {return option.value})
                 if (filterVals.includes("ALL")){
@@ -57,8 +57,8 @@ export const DropdownFilter: React.FC<DropdownFilterProps> = ({tsURL,field,field
                 }
             }
             }} multiple={multiple}>
-            <option selected={value.length == 0 || value[0] == 'NONE' ? true : false } value={"NONE"}>NONE</option>
-            <option value={"ALL"}>ALL {fieldLabel}</option>
+            {/* <option selected={value.length == 0 || value[0] == 'NONE' ? true : false } value={"NONE"}>NONE</option> */}
+            <option  value={"ALL"}>ALL {fieldLabel}</option>
 
             {options.map((option)=>{
                 return <option selected={option && option[1] ? 

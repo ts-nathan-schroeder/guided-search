@@ -35,7 +35,7 @@ const MyReports: React.FC<MyReportsProps> = ({tsURL,collapseFilters}: MyReportsP
     return (
 
       <div >
-        <div className="flex font-bold w-96 h-full items-center hover:cursor-pointer hover:text-blue-500" onClick={()=>setDropdownVisible(!dropdownVisible)}>My Reports</div>
+        <div className="flex font-bold w-full h-full items-center hover:cursor-pointer hover:text-blue-500" onClick={()=>setDropdownVisible(!dropdownVisible)}>My Reports</div>
         {dropdownVisible && (<div className="absolute shadow-2xl flex flex-col space-y-4 bg-white p-4" >
         {restAnswers.map((answer: any)=>(
             <div className="hover:cursor-pointer hover:text-blue-500" onClick={()=>loadReport(answer.id)}>
