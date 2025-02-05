@@ -112,8 +112,9 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
         var newPaddedDate = `${pMonth}/${pDay}/${year}`;
         return newPaddedDate;
     }
-    function onReportLoad(){
+    function onReportLoad(isConvo: boolean){
         let searchString = "";
+        let convoString = ""
         //Add fields
         let selectedFieldsCopy: string[] = selectedFields;
         // if (groupRollup) selectedFieldsCopy.push(FieldName.GROUP)
@@ -131,54 +132,62 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
         }
         for (var field of selectedFieldsCopy){
             searchString+="["+field+"] "
+            convoString+=", "+field
         }
-        //Add filters
-
-        if (copyPasteProductList && copyPasteProductList.length > 0){
-            for (var item of copyPasteProductList){
-                searchString+= " ["+copyPasteProductListColumn+"].'"+item+"'"
-            }
-        }
-        if (copyPasteLocationList && copyPasteLocationList.length > 0){
-            for (var item of copyPasteLocationList){
-                searchString+= " ["+copyPasteLocationListColumn+"].'"+item+"'"
-            }
-        }
+        //Add filters   
 
         //Add Product Fields
         if (copyPasteProductListColumn == FieldID.CATEGORY || (category.length > 0 && category[0]!='ALL' ) || categoryRollup){
             for (var categoryField of CategoryFields){
                 searchString+=" ["+categoryField+"]"
+                convoString+= ", " +categoryField
             } 
         }
         if (copyPasteProductListColumn == FieldID.GROUP || (group.length > 0 && group[0]!='ALL') || groupRollup){
             for (var groupField of GroupFields){
                 searchString += " ["+groupField+"]"
+                convoString+=", "+groupField
             }    
         }
         if (copyPasteProductListColumn == FieldID.UPC || (upc.length > 0 && upc[0]!='ALL') || upcRollup){
             for (var upcField of UPCFields){
                 searchString += " ["+upcField+"]"
+                convoString+=", "+upcField
             }      
         }
-
+        
         //Add Location Fields
         if (copyPasteLocationListColumn == FieldID.STORE || (store.length > 0 && store[0]!='ALL') || storeRollup){
             for (var storeField of StoreFields){
                 searchString += " ["+storeField+"]"
+                convoString+=", "+storeField
             }
         }
         if (copyPasteLocationListColumn == FieldID.STORE || (division.length > 0 && division[0]!='ALL') || divisionRollup){
             for (var divisionField of DivisionFields){
                 searchString += " ["+divisionField+"]"
+                convoString+=", "+divisionField
             }
         }
         if (copyPasteLocationListColumn == FieldID.DISTRICT || (district.length > 0 && district[0]!='ALL') || districtRollup){
             for (var districtField of DistrictFields){
                 searchString += " ["+districtField+"]"
+                convoString+=", "+districtField
             }
         }
-
+        convoString+=". With the following filters: "
+        if (copyPasteProductList && copyPasteProductList.length > 0){
+            for (var item of copyPasteProductList){
+                searchString+= " ["+copyPasteProductListColumn+"].'"+item+"'"
+                convoString+=", "+copyPasteProductListColumn+"="+item
+            }
+        }
+        if (copyPasteLocationList && copyPasteLocationList.length > 0){
+            for (var item of copyPasteLocationList){
+                searchString+= " ["+copyPasteLocationListColumn+"].'"+item+"'"
+                convoString+=", "+copyPasteLocationListColumn+"="+item
+            }
+        }
 
         //Add Product Filters
         if (!copyPasteProductList){
@@ -186,18 +195,21 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                 if (categoryExclude) searchString+= " ["+FieldID.CATEGORY+"] !="
                 for (var value of category){
                     searchString+=" ["+FieldID.CATEGORY +"]."+"'"+value+"'"
+                    convoString+=", "+FieldID.CATEGORY+"="+value
                 }        
             }
             if ((group.length > 0 && group[0]!='ALL'))  {
                 if (groupExclude) searchString+= " ["+FieldID.GROUP+ "] !="
                 for (var value of group){
                     searchString+=" ["+FieldID.GROUP+"]."+"'"+value+"'"
+                    convoString+=", "+FieldID.GROUP+"="+value
                 }
             }
             if ((upc.length > 0 && upc[0]!='ALL'))  {
                 if (upcExclude) searchString+= " ["+FieldID.UPC+"] !="
                 for (var value of upc){
                     searchString+=" ["+FieldID.UPC+"]."+"'"+value+"'"
+                    convoString+=", "+FieldID.UPC+"="+value
                 }            
             }
         }
@@ -208,18 +220,21 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                 if (storeExclude) searchString+= " ["+FieldID.STORE +"] !="
                 for (var value of store){
                     searchString+=" ["+FieldID.STORE+"]."+"'"+value+"'"
+                    convoString+=", "+FieldID.STORE+"="+value
                 }
             }
             if ((district.length > 0 && district[0]!='ALL'))  {
                 if (districtExclude) searchString+= " ["+FieldID.DISTRICT+"] !="
                 for (var value of district){
                     searchString+=" ["+FieldID.DISTRICT+"]."+"'"+value+"'"
+                    convoString+=", "+FieldID.DISTRICT+"="+value
                 }
             }
             if ((division.length > 0 && division[0]!='ALL')) {
                 if (divisionExclude) searchString+=" ["+FieldID.DIVISION+"] !="
                 for (var value of division){
                     searchString+=" ["+FieldID.DIVISION+"]."+"'"+value+"'"
+                    convoString+=", "+FieldID.DIVISION+"="+value
                 }
             }
         }
@@ -240,6 +255,7 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
         }else{
             if (calendarWeek == "fiscal"){
                 searchString += " [Transaction Date].'"+timeFrame+"'"
+                convoString+=", Transaction Date="+timeFrame
             }else{ 
                 searchString += " [Promo Week Filters].'"+timeFrame+"'"
     
@@ -253,9 +269,14 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
         // }
         // searchString+=" [Week ID]."+"'"+timeFrame+"'"
 
-        const event = new CustomEvent('loadReport', {detail: {data: {
+        let event = new CustomEvent('loadReport', {detail: {data: {
             searchString: searchString}
         }});
+        if (isConvo){
+            event = new CustomEvent('loadConvo', {detail: {data: {
+                searchString: convoString}
+            }});
+        }
         window.dispatchEvent(event)
         toggleExpandFilters(false);
     }
@@ -521,15 +542,22 @@ export const Filters: React.FC<FilterProps> = ({tsURL}:FilterProps) => {
                     </div>
                 </div>
                 
-
-                    <div onClick={onReportLoad}  className="flex w-full bg-slate-600 hover:bg-slate-500 align-center items-center p-2 text-white font-bold rounded-lg  hover:cursor-pointer">
+                <div className="flex flex-row w-full space-x-2">
+                    <div onClick={()=>onReportLoad(false)}  className="flex w-2/3 bg-slate-600 hover:bg-slate-500 align-center items-center p-2 text-white font-bold rounded-lg  hover:cursor-pointer">
                         <span>Load Report</span>
                         <div className="ml-auto flex items-center bg-blue-400 hover:bg-blue-300 rounded-lg px-4 py-1">
                             <HiMiniPlay className="mr-2" /> {/* Icon next to "GO" */}
                             GO!
                         </div>
                     </div>
-      
+                    <div onClick={()=>onReportLoad(true)}  className="flex w-1/3 bg-slate-600 hover:bg-slate-500 align-center items-center p-2 text-white font-bold rounded-lg  hover:cursor-pointer">
+                        <span>Load Convo</span>
+                        <div className="ml-auto flex items-center bg-blue-400 hover:bg-blue-300 rounded-lg px-4 py-1">
+                            <HiMiniPlay className="mr-2" /> {/* Icon next to "GO" */}
+                            GO!
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         </div>

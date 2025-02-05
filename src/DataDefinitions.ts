@@ -24,7 +24,13 @@ export enum FieldLabel {
 }
 export const BaseFields: string[] = [
     'Sales',
-    encodeURIComponent('Gross Profit ($)')
+    encodeURIComponent('Gross Profit ($)'),
+    encodeURIComponent('Gross Profit (%)')
+
+]
+export const BaseConvoFields = [
+    'Sales',
+    'Gross Profit'
 ]
 export const StoreFields: string [] = [
     'Store Name'

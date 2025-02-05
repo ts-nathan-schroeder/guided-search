@@ -1,6 +1,6 @@
-import { SageEmbed, SearchEmbed } from "@thoughtspot/visual-embed-sdk/lib/src/react"
+import { ConversationEmbed, SageEmbed, SearchEmbed } from "@thoughtspot/visual-embed-sdk/lib/src/react"
 import { useEffect, useRef, useState } from "react"
-import { BaseFields } from "./DataDefinitions";
+import { BaseFields, BaseConvoFields } from "./DataDefinitions";
 import loadingIcon from "./loading.gif"
 
 interface SearchProps {
@@ -26,6 +26,19 @@ export const Search = ({worksheetID}:SearchProps) => {
                 loadingRef.current.style.display="flex"
                 setHasLoaded(true);
             }
+
+        }
+        window.addEventListener('loadConvo',  handleLoadConvo)
+        function handleLoadConvo(e: any){
+            setIsExistingReport(false);
+            setIsSage(true);
+            setSearchString(e.detail.data.searchString);
+            if (ref && ref.current && loadingRef && loadingRef.current){
+                ref.current.style.display="none"
+                loadingRef.current.style.display="flex"
+                setHasLoaded(true);
+            }
+
         }
         window.addEventListener('loadReport',  handleLoad)
         function handleLoadExisting(e: any){
@@ -37,6 +50,7 @@ export const Search = ({worksheetID}:SearchProps) => {
                 loadingRef.current.style.display="flex"
                 setHasLoaded(true);
             }
+            console.log("report updated",e.detail.data.id)
         }
         window.addEventListener('loadSage',  handleSage)
         function handleSage(e: any){
@@ -54,28 +68,28 @@ export const Search = ({worksheetID}:SearchProps) => {
             window.removeEventListener("loadExistingReport", handleLoadExisting)
             window.removeEventListener("loadReport", handleLoad)
         };
-    })
+    },[])
 
-    let searchBase = "";//"[Week ID].'202327'";
-    for (var field of BaseFields){
-        searchBase+= " ["+field+"]"
+    let searchBase = "" 
+    if (isSage){
+        searchBase = "Show me the following Columns: " + BaseConvoFields.join(", ")
+
+    }else{
+        for (var field of BaseFields){
+            searchBase+= " ["+field+"]"
+        }
+        console.log(searchBase,searchString)
     }
-    console.log(searchBase,searchString)
+    
     return (
         <>
-        <div ref={ref} style={{height:'900px',display:'none',width:'100%'}}>
+        <div ref={ref} style={{height:'900px',display:isSage?'flex':'none',width:'100%'}}>
             {isSage ?
-            <SageEmbed 
+            <ConversationEmbed 
             searchOptions={{
-                searchQuery: sageSearch,
-                executeSearch: sageSearch!='' ? true : false
+                searchQuery: searchBase +  searchString,
               }}
-              hideWorksheetSelector={true}
-              hideAutocompleteSuggestions={true}
-              hideSageAnswerHeader={true}
-              hideSearchBarTitle={true}
-              hideSampleQuestions={true}
-              dataSource={worksheetID}
+              worksheetId={worksheetID}
               onData={() => {
                 if (ref && ref.current && loadingRef && loadingRef.current){
                     ref.current.style.display="flex"
@@ -108,7 +122,7 @@ export const Search = ({worksheetID}:SearchProps) => {
                 }
                 }
             }}
-              ></SageEmbed>
+              ></ConversationEmbed>
 :
 
           
@@ -157,7 +171,7 @@ export const Search = ({worksheetID}:SearchProps) => {
         }
         </div>
         
-        <div  style={{height:"900px"}} ref={loadingRef} className="w-full flex h-full align-center justify-center font-bold text-black pt-40 text-2xl">
+        <div  style={{height:"900px",display:isSage?'none':'flex'}} ref={loadingRef} className="w-full h-full align-center justify-center font-bold text-black pt-40 text-2xl">
             {hasLoaded ? <div className="flex flex-col align-center justify-center items-center">
              <div> LOADING REPORT DATA  </div>
             <img className="w-16 h-16"  src={loadingIcon}></img>
